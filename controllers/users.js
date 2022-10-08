@@ -20,10 +20,14 @@ module.exports.createUser = (req, res) => {
 
 module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
-    .then((user) => res.send({ data: user }))
+    .then((user) => {
+      if (user) {
+        res.send({ data: user });
+      } else { res.status(ERROR_CODE_MISSING_ENTRY).send({ message: 'Пользователь с указанным _id не найден.' }); }
+    })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(ERROR_CODE_MISSING_ENTRY).send({ message: 'Пользователь по указанному _id не найден.' });
+      if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
+        res.status(ERROR_CODE_INCORRECT_DATA).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
         return;
       }
       res.status(ERROR_CODE_OTHER).send({ message: 'Произошла ошибка' });
