@@ -1,8 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const router = require('./routes/users');
+const userRrouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
+const unknownRouter = require('./routes/unknown');
 
 const { PORT = 3000 } = process.env;
 
@@ -21,9 +22,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/users', router);
+app.use('/users', userRrouter);
 
 app.use('/cards', cardRouter);
+
+app.use('*', unknownRouter);
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает

@@ -28,7 +28,7 @@ module.exports.deleteCard = (req, res) => {
     })
     .catch((err) => {
       if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
-        res.status(ERROR_CODE_INCORRECT_DATA).send({ message: 'Переданы некорректные данные для постановки лайка.' });
+        res.status(ERROR_CODE_INCORRECT_DATA).send({ message: 'Переданы некорректные данные для удаления карточки.' });
         return;
       }
       res.status(ERROR_CODE_OTHER).send({ message: 'Произошла ошибка' });
