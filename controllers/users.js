@@ -1,8 +1,10 @@
 const User = require('../models/user');
 
-const ERROR_CODE_INCORRECT_DATA = 400;
-const ERROR_CODE_MISSING_ENTRY = 404;
-const ERROR_CODE_OTHER = 500;
+const {
+  ERROR_CODE_INCORRECT_DATA,
+  ERROR_CODE_MISSING_ENTRY,
+  ERROR_CODE_OTHER,
+} = require('../utils.js/errors');
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
@@ -11,6 +13,8 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
+      // Возникает, если мы попытаемся записать данные в базу, не соответствущие схеме,
+      // например, имя юзера меньше 2 или больше 30 знаков
         res.status(ERROR_CODE_INCORRECT_DATA).send({ message: 'Переданы некорректные данные при создании пользователя' });
         return;
       }
@@ -26,7 +30,7 @@ module.exports.getUser = (req, res) => {
       } else { res.status(ERROR_CODE_MISSING_ENTRY).send({ message: 'Пользователь с указанным _id не найден.' }); }
     })
     .catch((err) => {
-      if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
+      if (err.name === 'CastError') {
         res.status(ERROR_CODE_INCORRECT_DATA).send({ message: 'Переданы некорректные данные при обновлении профиля.' });
         return;
       }

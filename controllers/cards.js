@@ -1,8 +1,10 @@
 const Card = require('../models/card');
 
-const ERROR_CODE_INCORRECT_DATA = 400;
-const ERROR_CODE_MISSING_ENTRY = 404;
-const ERROR_CODE_OTHER = 500;
+const {
+  ERROR_CODE_INCORRECT_DATA,
+  ERROR_CODE_MISSING_ENTRY,
+  ERROR_CODE_OTHER,
+} = require('../utils.js/errors');
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
@@ -27,7 +29,7 @@ module.exports.deleteCard = (req, res) => {
       } else { res.status(ERROR_CODE_MISSING_ENTRY).send({ message: 'Передан несуществующий _id карточки.' }); }
     })
     .catch((err) => {
-      if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
+      if (err.name === 'CastError') {
         res.status(ERROR_CODE_INCORRECT_DATA).send({ message: 'Переданы некорректные данные для удаления карточки.' });
         return;
       }
