@@ -10,6 +10,11 @@ const cardSchema = new mongoose.Schema({
   link: { // ссылка на картинку
     type: String, // это строка
     required: true, // оно должно быть у каждой карточки, обязательное поле
+    validate: {
+      validator(v) { // проверка соответствия схеме электронной почты. v - значение свойства email
+        return /^https?:\/\/(www.)?[\w-]+\.[\w/]+#?$/.test(v);
+      },
+    },
   },
   owner: { // ссылка на модель автора карточки
     type: mongoose.Schema.Types.ObjectId,
