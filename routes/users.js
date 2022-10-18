@@ -39,7 +39,7 @@ userRrouter.patch('/me', celebrate({
 
 userRrouter.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().uri(),
+    avatar: Joi.string().regex(/^https?:\/\/(www.)?[\w-]+\..+#?$/),
   }),
   headers: Joi.object().keys({
     authorization: Joi.string().required(),
