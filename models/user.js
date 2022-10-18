@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     type: String, // это строка
     validate: {
       validator(v) { // проверка соответствия схеме электронной почты. v - значение свойства email
-        return /^https?:\/\/(www.)?[\w-]+\.[\w/]+#?$/.test(v);
+        return /^https?:\/\/(www.)?[\w-]+\..+#?$/.test(v);
       },
     },
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',

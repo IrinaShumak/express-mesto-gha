@@ -12,7 +12,7 @@ const cardSchema = new mongoose.Schema({
     required: true, // оно должно быть у каждой карточки, обязательное поле
     validate: {
       validator(v) { // проверка соответствия схеме электронной почты. v - значение свойства email
-        return /^https?:\/\/(www.)?[\w-]+\.[\w/]+#?$/.test(v);
+        return /^https?:\/\/(www.)?[\w-]+\..+#?$/.test(v);
       },
     },
   },
