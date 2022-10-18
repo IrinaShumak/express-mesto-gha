@@ -69,7 +69,7 @@ const getUser = (req, res, criteria, next) => {
   User.findById(criteria) // userId берём из адреса запроса GET /users/:userId
     .then((user) => {
       if (user) {
-        res.send({ data: user });
+        res.status(200).send({ data: user });
       } else { throw new NotFoundError('Пользователь с указанным _id не найден.'); }
     })
     .catch((err) => {
@@ -93,7 +93,7 @@ module.exports.getCurrentUser = (req, res, next) => {
 
 module.exports.getAllUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.send({ data: users }))
+    .then((users) => res.status(200).send({ data: users }))
     .catch(next);
 };
 
@@ -104,7 +104,7 @@ module.exports.updateUserProfile = (req, res, next) => {
     { name, about },
     { new: true, runValidators: true }, // обработчик then получит на вход обновлённую запись
   )
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new IncorrectInputError('Переданы некорректные данные при обновлении профиля');
@@ -124,7 +124,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
     { avatar },
     { new: true, runValidators: true }, // обработчик then получит на вход обновлённую запись
   )
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new IncorrectInputError('Переданы некорректные данные при обновлении аватара.');
