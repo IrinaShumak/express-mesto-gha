@@ -23,7 +23,7 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (card) {
-        if (card.owner.toString === req.user._id) {
+        if (card.owner._id.toString() === req.user._id) {
           card.delete()
             .then(() => res.send({ data: 'Пост удалён' }));
         } else {
