@@ -26,7 +26,7 @@ userRrouter.get('/:userId', celebrate({
     authorization: Joi.string().required(),
   }).unknown(true),
   params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24).required(),
+    userId: Joi.string().hex().length(24).required(),
   }).unknown(true),
 }), getOtherUser);
 

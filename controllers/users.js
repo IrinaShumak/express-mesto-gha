@@ -4,7 +4,6 @@ const User = require('../models/user');
 
 const NotFoundError = require('../errors/not-found-err');
 const IncorrectInputError = require('../errors/incorrect-input-err');
-const AuthorizationError = require('../errors/authorization-err');
 const DublicationError = require('../errors/dublication-err');
 
 module.exports.createUser = (req, res, next) => {
@@ -34,14 +33,13 @@ module.exports.createUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
       // Возникает, если мы попытаемся записать данные в базу, не соответствущие схеме,
       // например, имя юзера меньше 2 или больше 30 знаков
-        throw new IncorrectInputError('Переданы некорректные данные при создании пользователя');
+        next(new IncorrectInputError('Переданы некорректные данные при создании пользователя'));
       } else if (err.code === 11000) {
-        throw new DublicationError('Такая почта уже существует');
+        next(new DublicationError('Такая почта уже существует'));
       } else {
         next(err);
       }
-    })
-    .catch(next);
+    });
 };
 
 module.exports.login = (req, res, next) => {
@@ -58,10 +56,9 @@ module.exports.login = (req, res, next) => {
         .send({ token })
         .end();
     })
-    .catch(() => {
-      throw new AuthorizationError('Неправильная почта или пароль');
-    })
-    .catch(next);
+    .catch((err) => {
+      next(err);
+    });
 };
 
 const getUser = (req, res, criteria, next) => {
@@ -69,15 +66,14 @@ const getUser = (req, res, criteria, next) => {
     .then((user) => {
       if (user) {
         res.send({ data: user });
-      } else { throw new NotFoundError('Пользователь с указанным _id не найден.'); }
+      } else { next(new NotFoundError('Пользователь с указанным _id не найден.')); }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new IncorrectInputError('Переданы некорректные данные при запросе.');
+        next(new IncorrectInputError('Переданы некорректные данные при запросе.'));
       }
       next(err);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.getOtherUser = (req, res, next) => {
@@ -106,14 +102,13 @@ module.exports.updateUserProfile = (req, res, next) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new IncorrectInputError('Переданы некорректные данные при обновлении профиля');
+        next(new IncorrectInputError('Переданы некорректные данные при обновлении профиля'));
       }
       if (err.name === 'CastError') {
-        throw new NotFoundError('Пользователь с указанным _id не найден.');
+        next(new NotFoundError('Пользователь с указанным _id не найден.'));
       }
       next(err);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.updateUserAvatar = (req, res, next) => {
@@ -126,12 +121,11 @@ module.exports.updateUserAvatar = (req, res, next) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new IncorrectInputError('Переданы некорректные данные при обновлении аватара.');
+        next(new IncorrectInputError('Переданы некорректные данные при обновлении аватара.'));
       }
       if (err.name === 'CastError') {
-        throw new NotFoundError('Пользователь с указанным _id не найден.');
+        next(new NotFoundError('Пользователь с указанным _id не найден.'));
       }
       next(err);
-    })
-    .catch(next);
+    });
 };

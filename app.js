@@ -41,8 +41,7 @@ app.use('/users', userRrouter);
 app.use('/cards', cardRouter);
 
 app.use('*', (req, res, next) => {
-  const err = new NotFoundError('Запрашиваемый ресурс не найден');
-  next(err);
+  next(new NotFoundError('Запрашиваемый ресурс не найден'));
 });
 
 app.use(errors());
