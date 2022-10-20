@@ -49,12 +49,7 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res
-        .cookie('jwt', token, {
-          maxAge: 3600000 * 24 * 7,
-          httpOnly: true,
-        })
-        .send({ token })
-        .end();
+        .send({ token });
     })
     .catch((err) => {
       next(err);
@@ -71,6 +66,7 @@ const getUser = (req, res, criteria, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new IncorrectInputError('Переданы некорректные данные при запросе.'));
+        return;
       }
       next(err);
     });
@@ -103,9 +99,11 @@ module.exports.updateUserProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new IncorrectInputError('Переданы некорректные данные при обновлении профиля'));
+        return;
       }
       if (err.name === 'CastError') {
         next(new NotFoundError('Пользователь с указанным _id не найден.'));
+        return;
       }
       next(err);
     });
@@ -122,9 +120,11 @@ module.exports.updateUserAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new IncorrectInputError('Переданы некорректные данные при обновлении аватара.'));
+        return;
       }
       if (err.name === 'CastError') {
         next(new NotFoundError('Пользователь с указанным _id не найден.'));
+        return;
       }
       next(err);
     });
